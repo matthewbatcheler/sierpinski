@@ -1,1 +1,1 @@
-Go to github pages to see the actual content, or see the code by clicking on "desmos_sierpinski.html"
+Go [here](https://matthewbatcheler.github.io/sierpinski/desmos_sierpinski.html) to see the actual content, or see the code by clicking on "desmos_sierpinski.html"

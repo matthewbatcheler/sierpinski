@@ -1,0 +1,69 @@
+<script src="https://www.desmos.com/api/v1.5/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+
+<body onload = "ensure_size()">
+<div id="calculator" style="width: 100%; height: 80%;"></div>
+<br />
+<p>enter desired iterations then press draw (warning: exponential time!)</p>
+<input type = "text" size = "100" id = "depth_box" />
+<input type = "button" onclick = "reset_and_draw()" value = "draw"/>
+</body>
+<script>
+var id_counter = 0; //next id to use
+
+var o_x = -2;
+var o_y = -2;
+var start_width = 2 * Math.abs(o_x);
+
+var elt = document.getElementById('calculator');
+var calculator = Desmos.GraphingCalculator(elt, {expressions: false});
+
+
+calculator.setExpression({id:"graph0", latex: "Enter\\ desired\\ iterations\\ below"});
+id_counter++;
+function reset_and_draw(){ //this is pretty inefficient because it redraws all triangles every time. who cares
+  max_depth = document.getElementById("depth_box").value; 
+
+  var to_clear = [];
+  for(var i =  0; i < id_counter; i++){ //dont clear 1 since this is the outline and always can stay.
+    console.log("clearing " + i);
+    to_clear.push({id: "graph" + i});
+  }
+  console.log(to_clear);
+  calculator.removeExpressions(to_clear)
+
+  id_counter = 0;
+
+  //draw outer triangle
+  calculator.setExpression({ id: ('graph' + id_counter), color: Desmos.Colors.BLACK, latex: '\\operatorname{polygon}\\left(\\left('+o_x+','+o_y+'\\right),\\left('+ -o_x + ','+ o_y +'\\right),\\left(0,'+ (o_y + start_width * Math.sqrt(3)/2) +'\\right)\\right)', fill:false });
+  id_counter++;
+  draw_triangle(o_x,o_y,start_width,1,max_depth);
+}
+
+
+//side length of the 'current' (outer) triange, new side len will be this/2
+//start cords are bottom left corner of the outer (parent) triangle
+function draw_triangle(start_x, start_y, side_len, depth, max_depth){  
+  if(depth > max_depth){
+    return true; //break from the loop
+  }
+
+  var top_y = start_y + (side_len*Math.sqrt(3)/4); //the y height for the top 2 verticies of the upside down triangle
+
+  var x_offset = side_len / 4; //offset from each bottom vertex x for the top verticices x position
+
+  var x_left = start_x + x_offset; //x positions for the top 2 verts
+  var x_right = start_x + side_len - x_offset;
+
+  //draw a triangle in the middle of this one. upside down                                              base middle                                  upper left
+  calculator.setExpression({ id: ('graph' + id_counter), color: Desmos.Colors.BLACK, latex: '\\operatorname{polygon}\\left(\\left('+ (start_x + side_len/2) +','+start_y+'\\right),\\left( '+ x_left +','+ top_y +'\\right),\\left('+ x_right +','+ top_y +'\\right)\\right)', fill:true });
+  id_counter++;
+  //now draw triangles for all sub-regions
+  draw_triangle(start_x, start_y, side_len / 2, depth + 1, max_depth); //DYNAMIC PROGRMAMING TIME!!!! :D
+  draw_triangle(start_x + side_len/2, start_y, side_len / 2, depth + 1, max_depth);
+  draw_triangle(x_left, top_y, side_len / 2, depth + 1, max_depth); 
+
+
+}
+
+
+</script>

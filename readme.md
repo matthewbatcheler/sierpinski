@@ -1,0 +1,1 @@
+Go to github pages to see the actual content, or see the code by clicking on "desmos_sierpinski.html"

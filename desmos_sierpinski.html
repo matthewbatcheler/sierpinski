@@ -42,6 +42,11 @@ function reset_and_draw(){ //this is pretty inefficient because it redraws all t
   draw_triangle(o_x,o_y,start_width,1,max_depth);
 }
 
+//precomputed things
+
+var sqrt3_div_4 = Math.sqrt(3)/4;
+
+
 
 //side length of the 'current' (outer) triange, new side len will be this/2
 //start cords are bottom left corner of the outer (parent) triangle
@@ -50,7 +55,7 @@ function draw_triangle(start_x, start_y, side_len, depth, max_depth){
     return true; //break from the loop
   }
 
-  var top_y = start_y + (side_len*Math.sqrt(3)/4); //the y height for the top 2 verticies of the upside down triangle
+  var top_y = start_y + (side_len*sqrt3_div_4); //the y height for the top 2 verticies of the upside down triangle
 
   var x_offset = side_len / 4; //offset from each bottom vertex x for the top verticices x position
 
